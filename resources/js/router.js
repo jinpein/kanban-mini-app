@@ -1,13 +1,5 @@
-<template>
-    <div id="app">
-        <h1>Kanban Mini App</h1>
-        <router-view></router-view>
-    </div>
-</template>
-
-<script>
 import { createRouter, createWebHistory } from 'vue-router';
-import Board from './Board.vue'; // Assuming you will create this component
+import Board from './components/Board.vue'; // Assuming you will create this component
 
 const routes = [
     {
@@ -23,8 +15,4 @@ const router = createRouter({
     routes,
 });
 
-export default {
-    name: 'App',
-    router // Add the router to the component
-}
-</script>
+export default router;
