@@ -1,6 +1,6 @@
 <template>
     <li
-        class="task bg-gray-100 p-2 rounded-full mb-2 shadow cursor-move relative"
+        class="task"
         draggable="true"
         @dragstart="handleDragStart"
     >
@@ -8,13 +8,12 @@
         <img
             src="/public/icons/pending-tasks.png"
             alt="History"
-            class="absolute top-2 right-2 w-6 h-6 cursor-pointer"
             @click="openHistoryModal"
         />
 
         <div class="task-content" v-html="formattedContent"></div>
-        <div class="flex items-center justify-between mt-2">
-            <div class="flex items-center gap-2">
+        <div class="flex">
+            <div class="flex gap-2">
                 <select
                     class="border rounded px-2 py-1"
                     v-model="selectedUser"
@@ -30,20 +29,20 @@
                     </option>
                 </select>
                 <button
-                    class="bg-yellow-500 text-white px-2 py-1 rounded"
+                    class="bg-yellow-500 text-white"
                     @click="openModal"
                 >
                     Edit
                 </button>
                 <button
-                    class="bg-red-500 text-white px-2 py-1 rounded"
+                    class="bg-red-500 text-white"
                     @click="confirmDeleteTask"
                 >
                     Delete
                 </button>
             </div>
         </div>
-        <div class="text-xs text-gray-500 mt-2">
+        <div class="text-xs">
             <p v-if="task.user">Assigned to: {{ task.user.name }}</p>
             <p>{{ task.status }}: {{ task.timestamp }}</p>
         </div>
@@ -57,13 +56,13 @@
                 ></textarea>
                 <div class="flex justify-end gap-2 mt-4">
                     <button
-                        class="bg-blue-500 text-white px-4 py-2 rounded"
+                        class="bg-blue-500 text-white"
                         @click="saveModalContent"
                     >
                         Save
                     </button>
                     <button
-                        class="bg-gray-500 text-white px-4 py-2 rounded"
+                        class="bg-gray-500 text-white"
                         @click="closeModal"
                     >
                         Cancel
@@ -83,7 +82,7 @@
                 </ul>
                 <div class="flex justify-end gap-2 mt-4">
                     <button
-                        class="bg-gray-500 text-white px-4 py-2 rounded"
+                        class="bg-gray-500 text-white"
                         @click="closeHistoryModal"
                     >
                         Close

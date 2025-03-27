@@ -14,11 +14,26 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+/* General styles */
+#app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+}
+
 /* Column styles */
 .column {
     min-height: 300px;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 1rem;
 }
 
+/* Modal styles */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -48,12 +63,19 @@
     padding: 1.5rem; /* Maintain padding for content */
     display: inline-block;
     word-wrap: break-word; /* Ensure long text wraps */
-    white-space: pre-wrap; /* Preserve whitespace and wrap text */
+    overflow-wrap: break-word; /* Break long words for modern browsers */
+    white-space: normal; /* Allow text to wrap */
     outline: none;
     cursor: move;
     min-width: 200px; /* Set a minimum width */
+    max-width: 100%; /* Prevent tasks from exceeding column width */
     min-height: 120px; /* Set a minimum height */
-    border-radius: 0; /* Remove rounded corners to make it a square */
+    background-color: #f3f4f6;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 0.5rem;
+    overflow: hidden; /* Prevent content from overflowing */
+    text-overflow: ellipsis; /* Add ellipsis for overflowing text */
 }
 
 .task img {
@@ -65,8 +87,55 @@
     cursor: pointer;
 }
 
+/* Ensure task content wraps properly */
 .task-content {
-    margin-bottom: 1rem; /* Add spacing between content and buttons */
+    margin-bottom: 1rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    max-width: 100%; /* Prevent content from exceeding task width */
+}
+
+.task .flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.task .text-xs {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.5rem;
+}
+
+/* Button styles */
+button {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+button.bg-blue-500 {
+    background-color: #3b82f6;
+    color: white;
+}
+
+button.bg-gray-500 {
+    background-color: #6b7280;
+    color: white;
+}
+
+button.bg-yellow-500 {
+    background-color: #f59e0b;
+    color: white;
+}
+
+button.bg-red-500 {
+    background-color: #ef4444;
+    color: white;
 }
 
 /* Board styles */

@@ -1,6 +1,6 @@
 <template>
     <div
-        class="column bg-white shadow-md rounded p-4"
+        class="column"
         @dragover.prevent
         @drop="handleDrop"
     >
@@ -19,7 +19,7 @@
             />
         </ul>
         <button
-            class="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+            class="bg-blue-500 text-white"
             @click="openAddTaskModal"
         >
             Add Task
@@ -35,13 +35,13 @@
                 ></textarea>
                 <div class="flex justify-end gap-2 mt-4">
                     <button
-                        class="bg-blue-500 text-white px-4 py-2 rounded"
+                        class="bg-blue-500 text-white"
                         @click="saveNewTask"
                     >
                         Save
                     </button>
                     <button
-                        class="bg-gray-500 text-white px-4 py-2 rounded"
+                        class="bg-gray-500 text-white"
                         @click="closeModal"
                     >
                         Cancel
