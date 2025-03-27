@@ -29,10 +29,23 @@ export default {
     },
     methods: {
         addTask(taskContent, columnId) {
-            this.$emit('add-task', taskContent, columnId);
+            const newTask = {
+                id: Date.now(),
+                content: taskContent,
+            };
+            const column = this.columns.find(col => col.id === columnId);
+            if (column) {
+                column.tasks.unshift(newTask); // Add the task to the beginning of the array
+            }
         },
         editTask(taskId, newContent) {
-            this.$emit('edit-task', taskId, newContent);
+            for (const column of this.columns) {
+                const task = column.tasks.find(task => task.id === taskId);
+                if (task) {
+                    task.content = newContent;
+                    break;
+                }
+            }
         },
         deleteTask(taskId) {
             for (const column of this.columns) {
@@ -47,22 +60,17 @@ export default {
             const sourceColumn = this.columns.find(column =>
                 column.tasks.some(task => task.id === taskId)
             );
-            const taskIndex = sourceColumn.tasks.findIndex(task => task.id === taskId);
-            const [task] = sourceColumn.tasks.splice(taskIndex, 1);
+            if (sourceColumn) {
+                const taskIndex = sourceColumn.tasks.findIndex(task => task.id === taskId);
+                const [task] = sourceColumn.tasks.splice(taskIndex, 1);
 
-            const targetColumn = this.columns.find(column => column.name === targetColumnName);
-            if (targetColumn) {
-                targetColumn.tasks.push(task);
+                const targetColumn = this.columns.find(column => column.name === targetColumnName);
+                if (targetColumn) {
+                    this.deleteTask(taskId); // Explicitly delete the task from the source column
+                    targetColumn.tasks.push(task); // Add the task to the target column
+                }
             }
         },
     },
 };
 </script>
-
-<style>
-.board {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1rem;
-}
-</style>

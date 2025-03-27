@@ -126,38 +126,15 @@ export default {
                 `Are you sure you want to move this task to the "${this.title}" column?`
             );
             if (confirmTransfer) {
-                this.localTasks.push(task);
-                this.$emit('delete-task', task.id); // Notify the parent to delete the task from the original column
+                const isDuplicate = this.localTasks.some(existingTask => existingTask.id === task.id);
+                if (!isDuplicate) {
+                    this.localTasks.push(task);
+                    this.$emit('move-task', task.id, this.title); // Notify the parent to move the task
+                } else {
+                    alert('This task already exists in the column.');
+                }
             }
         },
     },
 };
 </script>
-
-<style>
-.column {
-    min-height: 300px;
-}
-
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Opaque background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-</style>

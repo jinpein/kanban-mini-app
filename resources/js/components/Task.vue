@@ -100,38 +100,3 @@ export default {
     },
 };
 </script>
-
-<style>
-.task {
-    list-style: none;
-    position: relative;
-    padding: 1rem;
-    display: inline-block;
-    word-wrap: break-word; /* Ensure long text wraps */
-    white-space: pre-wrap; /* Preserve whitespace and wrap text */
-    outline: none;
-    cursor: move;
-}
-
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Opaque background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-</style>
