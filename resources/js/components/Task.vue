@@ -1,25 +1,50 @@
 <template>
     <li
-        class="task bg-gray-100 p-2 rounded-full mb-2 shadow cursor-move"
+        class="task bg-gray-100 p-2 rounded-full mb-2 shadow cursor-move relative"
         draggable="true"
         @dragstart="handleDragStart"
     >
+        <!-- History Icon -->
+        <img
+            src="/public/icons/pending-tasks.png"
+            alt="History"
+            class="absolute top-2 right-2 w-6 h-6 cursor-pointer"
+            @click="openHistoryModal"
+        />
+
         <div class="task-content" v-html="formattedContent"></div>
-        <div class="flex justify-end gap-2 mt-2">
-            <button
-                class="bg-yellow-500 text-white px-2 py-1 rounded"
-                @click="openModal"
-            >
-                Edit
-            </button>
-            <button
-                class="bg-red-500 text-white px-2 py-1 rounded"
-                @click="confirmDeleteTask"
-            >
-                Delete
-            </button>
+        <div class="flex items-center justify-between mt-2">
+            <div class="flex items-center gap-2">
+                <select
+                    class="border rounded px-2 py-1"
+                    v-model="selectedUser"
+                    @change="assignUser"
+                >
+                    <option disabled value="">Assign User...</option>
+                    <option
+                        v-for="user in users"
+                        :key="user.id"
+                        :value="user.id"
+                    >
+                        {{ user.name }}
+                    </option>
+                </select>
+                <button
+                    class="bg-yellow-500 text-white px-2 py-1 rounded"
+                    @click="openModal"
+                >
+                    Edit
+                </button>
+                <button
+                    class="bg-red-500 text-white px-2 py-1 rounded"
+                    @click="confirmDeleteTask"
+                >
+                    Delete
+                </button>
+            </div>
         </div>
-        <div class="absolute bottom-0 left-0 text-xs text-gray-500">
+        <div class="text-xs text-gray-500 mt-2">
+            <p v-if="task.user">Assigned to: {{ task.user.name }}</p>
             <p>{{ task.status }}: {{ task.timestamp }}</p>
         </div>
 
@@ -46,6 +71,26 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal for task history -->
+        <div v-if="isHistoryModalOpen" class="modal-overlay">
+            <div class="modal-content">
+                <h3 class="text-lg font-bold mb-4">Task History</h3>
+                <ul class="list-disc pl-5">
+                    <li v-for="(log, index) in task.history" :key="index">
+                        {{ log }}
+                    </li>
+                </ul>
+                <div class="flex justify-end gap-2 mt-4">
+                    <button
+                        class="bg-gray-500 text-white px-4 py-2 rounded"
+                        @click="closeHistoryModal"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
     </li>
 </template>
 
@@ -57,16 +102,21 @@ export default {
             type: Object,
             required: true,
         },
+        users: {
+            type: Array,
+            required: true,
+        },
     },
     data() {
         return {
             isModalOpen: false,
+            isHistoryModalOpen: false,
             modalContent: '',
+            selectedUser: this.task.user ? this.task.user.id : '',
         };
     },
     computed: {
         formattedContent() {
-            // Ensure links are clickable and open in a new tab
             return this.task.content.replace(
                 /<a\s+(?!.*target="_blank")/g,
                 '<a target="_blank" rel="noopener noreferrer" '
@@ -77,6 +127,13 @@ export default {
         handleDragStart(event) {
             event.dataTransfer.setData('task', JSON.stringify(this.task));
         },
+        assignUser() {
+            const user = this.users.find(user => user.id === this.selectedUser);
+            if (user) {
+                this.task.history.push(`Assigned to user: ${user.name}`);
+                this.$emit('assign-user', this.task.id, this.selectedUser);
+            }
+        },
         openModal() {
             this.modalContent = this.task.content;
             this.isModalOpen = true;
@@ -85,6 +142,9 @@ export default {
             this.isModalOpen = false;
         },
         saveModalContent() {
+            if (this.modalContent !== this.task.content) {
+                this.task.history.push(`Content changed to: "${this.modalContent}"`);
+            }
             this.$emit('edit-task', this.task.id, this.modalContent);
             this.closeModal();
         },
@@ -96,6 +156,12 @@ export default {
         },
         deleteTask() {
             this.$emit('delete-task', this.task.id);
+        },
+        openHistoryModal() {
+            this.isHistoryModalOpen = true;
+        },
+        closeHistoryModal() {
+            this.isHistoryModalOpen = false;
         },
     },
 };

@@ -56,6 +56,15 @@
     border-radius: 0; /* Remove rounded corners to make it a square */
 }
 
+.task img {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+}
+
 .task-content {
     margin-bottom: 1rem; /* Add spacing between content and buttons */
 }

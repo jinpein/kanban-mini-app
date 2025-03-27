@@ -10,10 +10,12 @@
                 v-for="task in localTasks"
                 :key="task.id"
                 :task="task"
+                :users="users"
                 draggable="true"
                 @dragstart="handleDragStart(task)"
                 @edit-task="editTask"
                 @delete-task="deleteTask"
+                @assign-user="assignUser"
             />
         </ul>
         <button
@@ -64,6 +66,10 @@ export default {
             type: Array,
             required: true,
         },
+        users: {
+            type: Array,
+            required: true,
+        },
     },
     components: {
         Task,
@@ -95,6 +101,8 @@ export default {
                     content: this.modalContent,
                     timestamp: new Date().toLocaleString(),
                     status: 'Added',
+                    user: null,
+                    history: [`Task created with content: "${this.modalContent}"`],
                 };
                 this.localTasks.push(newTask);
                 this.$emit('add-task', this.modalContent, this.$props.title);
@@ -126,13 +134,8 @@ export default {
                 `Are you sure you want to move this task to the "${this.title}" column?`
             );
             if (confirmTransfer) {
-                const isDuplicate = this.localTasks.some(existingTask => existingTask.id === task.id);
-                if (!isDuplicate) {
-                    this.localTasks.push(task);
-                    this.$emit('move-task', task.id, this.title); // Notify the parent to move the task
-                } else {
-                    alert('This task already exists in the column.');
-                }
+                this.localTasks.push(task);
+                this.$emit('move-task', task.id, this.title); // Notify the parent to move the task
             }
         },
     },
