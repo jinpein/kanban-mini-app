@@ -1,21 +1,52 @@
 <template>
-    <div class="column bg-white shadow-md rounded p-4">
+    <div
+        class="column bg-white shadow-md rounded p-4"
+        @dragover.prevent
+        @drop="handleDrop"
+    >
         <h2 class="text-xl font-bold mb-4">{{ title }}</h2>
         <ul>
             <Task
                 v-for="task in localTasks"
                 :key="task.id"
                 :task="task"
+                draggable="true"
+                @dragstart="handleDragStart(task)"
                 @edit-task="editTask"
                 @delete-task="deleteTask"
             />
         </ul>
         <button
             class="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-            @click="promptAddTask"
+            @click="openAddTaskModal"
         >
             Add Task
         </button>
+
+        <!-- Modal for adding a task -->
+        <div v-if="isModalOpen" class="modal-overlay">
+            <div class="modal-content">
+                <textarea
+                    v-model="modalContent"
+                    class="w-full h-40 p-2 border rounded"
+                    placeholder="Enter task content..."
+                ></textarea>
+                <div class="flex justify-end gap-2 mt-4">
+                    <button
+                        class="bg-blue-500 text-white px-4 py-2 rounded"
+                        @click="saveNewTask"
+                    >
+                        Save
+                    </button>
+                    <button
+                        class="bg-gray-500 text-white px-4 py-2 rounded"
+                        @click="closeModal"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -40,6 +71,8 @@ export default {
     data() {
         return {
             localTasks: [...this.tasks],
+            isModalOpen: false,
+            modalContent: '',
         };
     },
     watch: {
@@ -51,18 +84,25 @@ export default {
         },
     },
     methods: {
-        promptAddTask() {
-            const taskContent = prompt('Enter task content:');
-            if (taskContent) {
+        openAddTaskModal() {
+            this.modalContent = '';
+            this.isModalOpen = true;
+        },
+        saveNewTask() {
+            if (this.modalContent.trim()) {
                 const newTask = {
                     id: Date.now(),
-                    content: taskContent,
+                    content: this.modalContent,
                     timestamp: new Date().toLocaleString(),
                     status: 'Added',
                 };
                 this.localTasks.push(newTask);
-                this.$emit('add-task', taskContent, this.$props.title);
+                this.$emit('add-task', this.modalContent, this.$props.title);
+                this.closeModal();
             }
+        },
+        closeModal() {
+            this.isModalOpen = false;
         },
         editTask(taskId, newContent) {
             const task = this.localTasks.find(task => task.id === taskId);
@@ -77,6 +117,19 @@ export default {
             this.localTasks = this.localTasks.filter(task => task.id !== taskId);
             this.$emit('delete-task', taskId);
         },
+        handleDragStart(task) {
+            event.dataTransfer.setData('task', JSON.stringify(task));
+        },
+        handleDrop(event) {
+            const task = JSON.parse(event.dataTransfer.getData('task'));
+            const confirmTransfer = confirm(
+                `Are you sure you want to move this task to the "${this.title}" column?`
+            );
+            if (confirmTransfer) {
+                this.localTasks.push(task);
+                this.$emit('delete-task', task.id); // Notify the parent to delete the task from the original column
+            }
+        },
     },
 };
 </script>
@@ -84,5 +137,27 @@ export default {
 <style>
 .column {
     min-height: 300px;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Opaque background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>

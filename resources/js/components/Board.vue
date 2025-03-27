@@ -8,6 +8,7 @@
             @add-task="addTask"
             @edit-task="editTask"
             @delete-task="deleteTask"
+            @move-task="moveTask"
         />
     </div>
 </template>
@@ -34,7 +35,25 @@ export default {
             this.$emit('edit-task', taskId, newContent);
         },
         deleteTask(taskId) {
-            this.$emit('delete-task', taskId);
+            for (const column of this.columns) {
+                const taskIndex = column.tasks.findIndex(task => task.id === taskId);
+                if (taskIndex !== -1) {
+                    column.tasks.splice(taskIndex, 1);
+                    break;
+                }
+            }
+        },
+        moveTask(taskId, targetColumnName) {
+            const sourceColumn = this.columns.find(column =>
+                column.tasks.some(task => task.id === taskId)
+            );
+            const taskIndex = sourceColumn.tasks.findIndex(task => task.id === taskId);
+            const [task] = sourceColumn.tasks.splice(taskIndex, 1);
+
+            const targetColumn = this.columns.find(column => column.name === targetColumnName);
+            if (targetColumn) {
+                targetColumn.tasks.push(task);
+            }
         },
     },
 };
