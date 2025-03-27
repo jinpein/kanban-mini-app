@@ -1,14 +1,14 @@
 <template>
-    <div class="board p-4">
-        <h2 class="text-2xl font-bold mb-4">Kanban Board</h2>
-        <div class="columns flex space-x-4">
-            <Column
-                v-for="(column, index) in columns"
-                :key="index"
-                :title="column.title"
-                :tasks="column.tasks"
-            />
-        </div>
+    <div class="board grid gap-4 p-4">
+        <Column
+            v-for="column in columns"
+            :key="column.id"
+            :title="column.name"
+            :tasks="column.tasks"
+            @add-task="addTask"
+            @edit-task="editTask"
+            @delete-task="deleteTask"
+        />
     </div>
 </template>
 
@@ -17,23 +17,33 @@ import Column from './Column.vue';
 
 export default {
     name: 'Board',
-    components: { Column },
-    data() {
-        return {
-            columns: [
-                { title: 'To Do', tasks: ['Task 1', 'Task 2'] },
-                { title: 'In Progress', tasks: ['Task 3'] },
-                { title: 'Done', tasks: ['Task 4', 'Task 5'] },
-            ],
-        };
+    props: {
+        columns: {
+            type: Array,
+            required: true,
+        },
+    },
+    components: {
+        Column,
+    },
+    methods: {
+        addTask(taskContent, columnId) {
+            this.$emit('add-task', taskContent, columnId);
+        },
+        editTask(taskId, newContent) {
+            this.$emit('edit-task', taskId, newContent);
+        },
+        deleteTask(taskId) {
+            this.$emit('delete-task', taskId);
+        },
     },
 };
 </script>
 
-<style scoped>
+<style>
 .board {
-    background-color: #f9fafb;
-    border-radius: 8px;
-    padding: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
 }
 </style>
