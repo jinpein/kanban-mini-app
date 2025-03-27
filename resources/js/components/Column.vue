@@ -54,12 +54,23 @@ export default {
         promptAddTask() {
             const taskContent = prompt('Enter task content:');
             if (taskContent) {
-                const newTask = { id: Date.now(), content: taskContent };
+                const newTask = {
+                    id: Date.now(),
+                    content: taskContent,
+                    timestamp: new Date().toLocaleString(),
+                    status: 'Added',
+                };
                 this.localTasks.push(newTask);
                 this.$emit('add-task', taskContent, this.$props.title);
             }
         },
         editTask(taskId, newContent) {
+            const task = this.localTasks.find(task => task.id === taskId);
+            if (task) {
+                task.content = newContent;
+                task.timestamp = new Date().toLocaleString();
+                task.status = 'Modified';
+            }
             this.$emit('edit-task', taskId, newContent);
         },
         deleteTask(taskId) {
