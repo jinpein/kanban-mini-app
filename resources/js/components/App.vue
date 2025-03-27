@@ -1,6 +1,7 @@
 <template>
-    <div id="app">
-        <h1>Kanban Mini App</h1>
+    <div id="app" class="min-h-screen bg-gray-50">
+        <h1 class="text-3xl font-semibold text-center">Kanban Mini App</h1>
+
         <router-view></router-view>
     </div>
 </template>

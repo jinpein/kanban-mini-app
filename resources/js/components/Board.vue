@@ -1,6 +1,7 @@
 <template>
-    <div>
-        <h2>Kanban Board</h2>
+    <div class="p-4 bg-gray-100">
+        <h2 class="text-2xl font-bold">Kanban Board</h2>
+
         <!-- Kanban board implementation will go here -->
     </div>
 </template>
