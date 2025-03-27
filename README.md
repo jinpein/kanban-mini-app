@@ -1,9 +1,11 @@
-# My Laravel Application
+# Kanban Mini App
 
 ## Description
-This is a Laravel application that serves as a skeleton for building web applications.
+This is a Laravel-based Kanban application with a Vue.js frontend. It allows users to manage tasks across multiple columns, assign users to tasks, and track task history.
 
 ## Installation
+
+### Backend Setup
 1. Clone the repository:
    ```bash
    git clone <repository-url>
@@ -12,7 +14,7 @@ This is a Laravel application that serves as a skeleton for building web applica
    ```bash
    cd kanban-mini-app
    ```
-3. Install dependencies:
+3. Install PHP dependencies:
    ```bash
    composer install
    ```
@@ -24,14 +26,39 @@ This is a Laravel application that serves as a skeleton for building web applica
    ```bash
    php artisan key:generate
    ```
-6. Run migrations:
+6. Run database migrations:
    ```bash
    php artisan migrate
    ```
-7. Start the application:
+
+### Frontend Setup
+1. Install Node.js dependencies:
+   ```bash
+   npm install
+   ```
+2. Build the frontend assets for development:
+   ```bash
+   npm run dev
+   ```
+   For production, use:
+   ```bash
+   npm run build
+   ```
+
+## Running the Application
+1. Start the Laravel backend server:
    ```bash
    php artisan serve
    ```
+2. Access the application at `http://localhost:8000`.
 
-## Usage
-Access the application at `http://localhost:8000`.
+## Features
+- Drag-and-drop task management across columns.
+- Assign users to tasks.
+- Track task history.
+- Responsive design with Tailwind CSS.
+
+## Development
+- Backend: Laravel
+- Frontend: Vue.js
+- Styling: Tailwind CSS
